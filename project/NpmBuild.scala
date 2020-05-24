@@ -15,6 +15,7 @@ object NpmBuild {
   object Commands {
     val install = (if (isWindows) "cmd /c " else "") + "npm install"
     val build = (if (isWindows) "cmd /c " else "") + "npm run build"
+    val clean = (if (isWindows) "cmd /c " else "") + "npm run clean"
     val buildWatch = (if (isWindows) "cmd /c " else "") + "npm run build watch"
   }
 
@@ -61,6 +62,7 @@ object NpmBuild {
 
       override def afterStarted(): Unit = {
         println("*N* after started")
+        Shell.execute(Commands.clean, frontendBase)
         process = Option(Shell.invoke(Commands.buildWatch, frontendBase))
       }
 
