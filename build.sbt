@@ -1,5 +1,6 @@
 name := """yobigakka"""
 organization := "red.drwp"
+maintainer := "whopperisdelicious@gmail.com"
 
 version := "1.0-SNAPSHOT"
 
@@ -10,8 +11,21 @@ scalaVersion := "2.13.2"
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "red.drwp.controllers._"
+PlayKeys.playRunHooks += baseDirectory.map(NpmBuild.apply).value
 
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "red.drwp.binders._"
+lazy val frontEndBuild = taskKey[Unit]("Frontend Build")
+
+val frontend = file("frontend")
+
+frontEndBuild := {
+  import NpmBuild._
+  val logger = streams.value.log
+  logger.info(s"Frontend Build in $frontend")
+  println(Shell.executeWithMsg(Commands.install, frontend))
+  println(Shell.executeWithMsg(Commands.build, frontend))
+}
+
+sources in (Compile, doc) := Seq.empty
+
+dist := (dist dependsOn frontEndBuild).value
+stage := (stage dependsOn dist).value
