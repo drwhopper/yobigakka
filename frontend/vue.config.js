@@ -6,10 +6,10 @@ const pages = {
     template: "public/index.html",
     filename: "app1.html"
   },
-  app2: {
-    entry: "src/pages/app2/main.ts",
+  appR: {
+    entry: "src/main.ts",
     template: "public/index.html",
-    filename: "app2.html"
+    filename: "app.html"
   }
 };
 
