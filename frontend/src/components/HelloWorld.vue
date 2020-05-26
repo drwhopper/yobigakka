@@ -1,8 +1,10 @@
 <template>
   <section class="hero is-medium is-primary is-bold">
-    <div class="container">
-      <h1 class="title">{{ msg }}</h1>
-      <h2>Yobigakka is here.</h2>
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">{{ msg }}</h1>
+        <h2>Yobigakka is here.</h2>
+      </div>
     </div>
   </section>
 </template>

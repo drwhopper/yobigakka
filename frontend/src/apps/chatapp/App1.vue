@@ -1,23 +1,22 @@
 <template>
-  <div id="app">
+  <div id="chatapp">
     <Nabar msg="" />
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-// @ is an alias to /src
+import { Component, Vue } from "vue-property-decorator";
+import HelloWorld from "@/components/HelloWorld.vue";
 import Nabar from "@/components/Nabar.vue";
 
-export default {
+@Component({
   components: {
+    HelloWorld,
     Nabar
   }
-};
+})
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">

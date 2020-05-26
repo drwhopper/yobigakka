@@ -23,6 +23,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def app1() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.app1())
+    Ok(views.html.chat())
   }
 }

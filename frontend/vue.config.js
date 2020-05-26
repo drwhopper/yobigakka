@@ -1,15 +1,15 @@
 // https://developers.cyberagent.co.jp/blog/archives/25126/
 
 const pages = {
-  app1: {
-    entry: "src/pages/app1/main.ts",
+  mainapp: {
+    entry: "src/apps/mainapp/main.ts",
     template: "public/index.html",
-    filename: "app1.html"
+    filename: "mainapp.html"
   },
-  appR: {
-    entry: "src/main.ts",
+  chatapp: {
+    entry: "src/apps/chatapp/main.ts",
     template: "public/index.html",
-    filename: "app.html"
+    filename: "chatapp.html"
   }
 };
 
