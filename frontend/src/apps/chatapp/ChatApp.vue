@@ -1,7 +1,6 @@
 <template>
   <div id="chatapp">
     <Nabar msg="" />
-    <router-view />
   </div>
 </template>
 
@@ -16,7 +15,11 @@ import Nabar from "@/components/Nabar.vue";
     Nabar
   }
 })
-export default class App extends Vue {}
+export default class ChatApp extends Vue {
+  mounted() {
+    const websocket = new WebSocket("ws://localhost:19000/chat");
+  }
+}
 </script>
 
 <style lang="scss">
