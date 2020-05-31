@@ -1,6 +1,12 @@
 <template>
   <div id="chatapp">
-    <Nabar msg="" />
+    <Nabar />
+    <HelloWorld msg="ちゃちゃっと" />
+    <div id="chat">
+      <div id="messages" v-for="message in messages" :key="message">
+        <div id="message">{{ message }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,8 +22,14 @@ import Nabar from "@/components/Nabar.vue";
   }
 })
 export default class ChatApp extends Vue {
+  messages: string[] = [];
+  websocket: WebSocket | null = null;
   mounted() {
-    const websocket = new WebSocket("ws://localhost:19000/chat");
+    this.websocket = new WebSocket("ws://localhost:19000/chat");
+    this.websocket.onmessage = this.onMessage;
+  }
+  onMessage(event: MessageEvent) {
+    this.messages.push(event.data);
   }
 }
 </script>

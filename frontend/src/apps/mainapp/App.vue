@@ -1,6 +1,6 @@
 <template>
   <div id="mainapp">
-    <Nabar msg="" />
+    <Nabar />
     <router-view />
   </div>
 </template>
