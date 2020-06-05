@@ -5,7 +5,9 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-GET     /app1                       controllers.HomeController.app1
+GET     /chatroom                   controllers.HomeController.chatRoom
+
+GET     /chatconnect                controllers.ChatController.chatConnect
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
