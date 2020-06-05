@@ -60,7 +60,7 @@ export default class ChatApp extends Vue {
   private myMessage = "";
   private websocket!: WebSocket;
   mounted() {
-    this.websocket = new WebSocket("ws://localhost:19000/chat");
+    this.websocket = new WebSocket("ws://localhost:9000/chatconnect");
     this.websocket.onmessage = this.onMessage;
   }
   onMessage(event: MessageEvent) {
