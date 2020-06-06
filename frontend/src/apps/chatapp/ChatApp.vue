@@ -20,7 +20,7 @@
           <section>
             <b-field label="会話" grouped>
               <b-input
-                placeholder="ノンストップ議論"
+                placeholder="たまにストップする議論"
                 expanded
                 v-model="myMessage"
               >
@@ -44,13 +44,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "@/components/HelloWorld.vue";
 import Nabar from "@/components/Nabar.vue";
 import TalkView from "@/components/chat/TalkView.vue";
 
 @Component({
   components: {
-    HelloWorld,
     Nabar,
     TalkView
   }

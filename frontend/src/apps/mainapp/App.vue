@@ -1,17 +1,22 @@
 <template>
   <div id="mainapp">
     <Nabar />
-    <router-view />
+    <HelloWorld msg="やふー" />
+    <section class="section">
+      <router-view />
+    </section>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Nabar from "@/components/Nabar.vue";
+import HelloWorld from "@/components/HelloWorld.vue";
 
 @Component({
   components: {
-    Nabar
+    Nabar,
+    HelloWorld
   }
 })
 export default class App extends Vue {}

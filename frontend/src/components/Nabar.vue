@@ -20,9 +20,13 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="buttons">
-          <a class="button is-primary">
-            Log in
-          </a>
+          <b-button
+            tag="router-link"
+            :to="{ path: '/signup' }"
+            type="is-primary"
+          >
+            Enter
+          </b-button>
         </div>
       </b-navbar-item>
     </template>

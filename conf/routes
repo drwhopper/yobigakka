@@ -5,7 +5,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-GET     /chatroom                   controllers.HomeController.chatRoom
+GET     /chatroom                   controllers.ChatController.chatRoom
 
 GET     /chatconnect                controllers.ChatController.chatConnect
 

@@ -13,14 +13,16 @@ import play.api.mvc._
 class ChatController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   def chatRoom(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.chat())
+    Ok(views.html.chat()).withSession("id" -> "ya")
   }
 
   def chatConnect(): WebSocket = {
     WebSocket.accept[String, String] {
-      request => pass
+      request => newflow(request)
     }
   }
 
-  val pass: Flow[String, String, NotUsed] = Flow[String].map("I am a server. " + _)
+  def newflow(request: RequestHeader): Flow[String, String, NotUsed] = {
+    Flow[String].map(request.session.get("id").getOrElse("no") + _)
+  }
 }
