@@ -54,9 +54,9 @@ import TalkView from "@/components/chat/TalkView.vue";
   }
 })
 export default class ChatApp extends Vue {
-  private messages: string[] = [];
-  private myMessage = "";
-  private websocket!: WebSocket;
+  messages: string[] = [];
+  myMessage = "";
+  websocket!: WebSocket;
   mounted() {
     this.websocket = new WebSocket("ws://localhost:9000/chatconnect");
     this.websocket.onmessage = this.onMessage;
