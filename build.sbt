@@ -8,8 +8,19 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.13.2"
 
-libraryDependencies += guice
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+resolvers += "Atlassian's Maven Public Repository" at "https://packages.atlassian.com/maven-public/"
+
+libraryDependencies ++= Seq(
+  guice,
+  "com.mohiva" %% "play-silhouette" % "7.0.0",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "7.0.0",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "7.0.0",
+  "com.mohiva" %% "play-silhouette-persistence" % "7.0.0",
+  "com.lightbend.akka" %% "akka-stream-alpakka-orientdb" % "2.0.0",
+
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+  "com.mohiva" %% "play-silhouette-testkit" % "7.0.0" % Test
+)
 
 PlayKeys.playRunHooks += baseDirectory.map(NpmBuild.apply).value
 
