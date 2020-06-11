@@ -16,7 +16,7 @@ object NpmBuild {
     val install = (if (isWindows) "cmd /c " else "") + "npm install"
     val build = (if (isWindows) "cmd /c " else "") + "npm run build"
     val clean = (if (isWindows) "cmd /c " else "") + "npm run clean"
-    val buildWatch = (if (isWindows) "cmd /c " else "") + "npm run build watch"
+    val buildWatch = (if (isWindows) "cmd /c " else "") + "npm run buildwatch"
   }
 
   object Shell {
