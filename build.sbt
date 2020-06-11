@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-password-bcrypt" % "7.0.0",
   "com.mohiva" %% "play-silhouette-crypto-jca" % "7.0.0",
   "com.mohiva" %% "play-silhouette-persistence" % "7.0.0",
+  "net.codingwell" %% "scala-guice" % "4.2.7",
+  "com.iheart" %% "ficus" % "1.4.7",
   "com.lightbend.akka" %% "akka-stream-alpakka-orientdb" % "2.0.0",
 
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,

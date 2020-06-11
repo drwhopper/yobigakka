@@ -6,7 +6,7 @@
     <div class="card-content">
       <div class="content">
         <b-field label="Name">
-          <b-input v-model="name" />
+          <b-input v-model="userID" />
           <p class="control">
             <b-button class="button is-primary" @click="submit">
               Submit
@@ -24,10 +24,12 @@ import axios from "axios";
 
 @Component
 export default class SignUp extends Vue {
-  name!: string;
+  userID!: string;
   submit() {
     axios
-      .post("/signup", name)
+      .post("/signup", {
+        userID: this.userID
+      })
       .then(response => (window.location.href = response.request.responseURL));
   }
 }
