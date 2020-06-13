@@ -1,7 +1,7 @@
 <template>
   <div id="mainapp">
     <Nabar />
-    <HelloWorld msg="やふー" />
+    <HelloWorld msg="やふーー" />
     <section class="section">
       <router-view />
     </section>

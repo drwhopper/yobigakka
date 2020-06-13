@@ -10,7 +10,7 @@ import models.services.SignUpService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
+@Singleton
 class SignUpController @Inject()(val controllerComponents: ControllerComponents,
                                  silhouette: Silhouette[DefaultEnv],
                                  signUpService: SignUpService) extends BaseController {
@@ -24,7 +24,7 @@ class SignUpController @Inject()(val controllerComponents: ControllerComponents,
           logger.warn(a.toString)
           Future.successful(BadRequest)
         },
-        _ => Future.successful(Redirect(routes.ChatController.chatRoom()))
+        _ => Future.successful(Ok)
       )
     }
   }

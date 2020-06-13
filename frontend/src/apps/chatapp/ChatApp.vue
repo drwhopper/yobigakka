@@ -18,7 +18,7 @@
         </div>
         <div class="column is-7">
           <section>
-            <b-field label="会話" grouped>
+            <b-field label="会話: " grouped>
               <b-input
                 placeholder="たまにストップする議論"
                 expanded
@@ -30,7 +30,9 @@
               </b-button>
             </b-field>
           </section>
-          <TalkView v-bind:chatmsg="messages" />
+          <section>
+            <TalkView v-bind:chatmsg="messages" />
+          </section>
         </div>
         <div class="column is-2">
           <div class="box">

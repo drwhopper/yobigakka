@@ -1,9 +1,7 @@
 <template>
   <div id="chat">
-    <div id="messages" v-for="message in chatmsg" :key="message">
-      <div class="box" id="message">
-        <p>{{ message }}</p>
-      </div>
+    <div class="box" id="message" v-for="message in chatmsg" :key="message">
+      <p>{{ message }}</p>
     </div>
   </div>
 </template>
