@@ -26,10 +26,12 @@ import axios from "axios";
 @Component
 export default class SignUp extends Vue {
   userID!: string;
+  password!: string;
   submit() {
     axios
       .post("/signup", {
-        userID: this.userID
+        userID: this.userID,
+        password: this.password
       })
       .then(() => this.$router.push("/"))
       .catch(error => console.log(error.response));

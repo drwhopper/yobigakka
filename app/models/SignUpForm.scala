@@ -8,7 +8,8 @@ object SignUpForm {
 
   val form: Form[CredentialsSingUpData] = Form(
     mapping(
-      "userID" -> nonEmptyText
+      "userID" -> nonEmptyText,
+      "password" -> nonEmptyText
     )(CredentialsSingUpData.apply)(CredentialsSingUpData.unapply))
 
 }
