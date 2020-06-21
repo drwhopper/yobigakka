@@ -10,7 +10,8 @@ import com.mohiva.play.silhouette.crypto.{JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators.{JWTAuthenticator, JWTAuthenticatorService, JWTAuthenticatorSettings}
 import com.mohiva.play.silhouette.impl.util.SecureRandomIDGenerator
 import models.DefaultEnv
-import models.services.UserService
+import models.daos.{UserDAO, UserDAOImpl}
+import models.services.{UserService, UserServiceImpl}
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.ceedubs.ficus.readers.EnumerationReader._
@@ -28,6 +29,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   // 設定
   override def configure(): Unit = {
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
+    bind[UserService].to[UserServiceImpl]
+    bind[UserDAO].to[UserDAOImpl]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())

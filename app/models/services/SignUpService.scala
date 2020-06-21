@@ -13,7 +13,12 @@ class SignUpService @Inject()(userService: UserService)(implicit ex: ExecutionCo
     val loginInfo = LoginInfo(CredentialsProvider.ID, data.userID)
     userService.retrieve(loginInfo).flatMap{
       case Some(user) => Future.successful(UserAlreadyExists)
-      case None => for {user <- userService.createOrUpdate(loginInfo, data.userID)} yield UserCreated(user)
+      case None =>
+        for {
+          user <- userService.createOrUpdate(loginInfo, data.userID)
+        } yield {
+          UserCreated(user)
+        }
     }
   }
 }
