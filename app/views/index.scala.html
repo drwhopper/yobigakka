@@ -1,8 +1,11 @@
+@(token: String)
+
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <title>Yobi</title>
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <meta name="csrf-token-value" content="@token">
   </head>
   <body>
     <div id="app"></div>

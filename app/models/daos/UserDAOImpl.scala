@@ -20,8 +20,6 @@ class UserDAOImpl @Inject()(implicit ex: ExecutionContext, reactiveMongoApi: Rea
    * @return
    */
   override def find(loginInfo: LoginInfo): Future[Option[User]] = {
-    println(loginInfo.providerKey)
-    println(loginInfo.providerID)
     val query = Json.obj("loginInfo" -> loginInfo)
     collection.flatMap(_.find(query, Option.empty[JsObject]).one[User])
   }

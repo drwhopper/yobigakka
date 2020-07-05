@@ -3,21 +3,27 @@ package modules
 import com.google.inject.name.Named
 import com.google.inject.{AbstractModule, Provides}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder}
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
-import com.mohiva.play.silhouette.api.util.{Clock, IDGenerator}
-import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
+import com.mohiva.play.silhouette.api.util._
+import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.crypto.{JcaCrypter, JcaCrypterSettings}
-import com.mohiva.play.silhouette.impl.authenticators.{JWTAuthenticator, JWTAuthenticatorService, JWTAuthenticatorSettings}
+import com.mohiva.play.silhouette.impl.authenticators._
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.util.SecureRandomIDGenerator
+import com.mohiva.play.silhouette.password.BCryptPasswordHasher
+import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import models.DefaultEnv
-import models.daos.{UserDAO, UserDAOImpl}
-import models.services.{UserService, UserServiceImpl}
+import models.daos._
+import models.services._
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.ceedubs.ficus.readers.EnumerationReader._
 import net.ceedubs.ficus.readers.ValueReader
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
+import play.api.libs.json.{Json, OFormat}
+import play.modules.reactivemongo.ReactiveMongoApi
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -31,6 +37,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
     bind[UserService].to[UserServiceImpl]
     bind[UserDAO].to[UserDAOImpl]
+    bind[PasswordHasher].toInstance(new BCryptPasswordHasher)
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())
@@ -66,5 +73,15 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     val config = configuration.underlying.as[JcaCrypterSettings]("silhouette.authenticator.crypter")
 
     new JcaCrypter(config)
+  }
+
+  @Provides
+  def provideCredentialsProvider(reactiveMongoApi: ReactiveMongoApi,
+                                 passwordHasher: PasswordHasher): CredentialsProvider = {
+    implicit lazy val format: OFormat[PasswordInfo] = Json.format[PasswordInfo]
+
+    val authInfoRepository = new DelegableAuthInfoRepository(new PasswordInfoDAO(reactiveMongoApi))
+    val passwordHasherRegistry = PasswordHasherRegistry(passwordHasher)
+    new CredentialsProvider(authInfoRepository, passwordHasherRegistry)
   }
 }

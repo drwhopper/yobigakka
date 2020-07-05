@@ -1,12 +1,12 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <p class="card-header-title">UserID Registration</p>
+      <p class="card-header-title">Sign in</p>
     </header>
     <div class="card-content">
       <div class="content">
-        <b-field label="Sign Up">
-          <b-input v-model="userID" />
+        <b-field label="Sign in">
+          <b-input v-model="aa" />
           <b-input v-model="password" />
           <p class="control">
             <b-button class="button is-primary" @click="submit">
@@ -24,15 +24,19 @@ import { Component, Vue } from "vue-property-decorator";
 import axios from "@/utils/axios";
 
 @Component
-export default class SignUp extends Vue {
+export default class SignIn extends Vue {
   userID = "";
   password = "";
   submit() {
     axios
-      .post("/signup", {
-        userID: this.userID,
-        password: this.password
-      })
+      .post(
+        "/signin",
+        {
+          userID: this.userID,
+          password: this.password
+        },
+        { headers: { "X-Requested-With": "wpwp", "Csrf-Token": "nocheck" } }
+      )
       .then(() => this.$router.push("/"))
       .catch(error => console.log(error.response));
   }
