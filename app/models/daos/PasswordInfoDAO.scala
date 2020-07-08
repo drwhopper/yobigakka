@@ -25,10 +25,14 @@ class PasswordInfoDAO @Inject()(reactiveMongoApi: ReactiveMongoApi)(implicit ec:
 
   def collection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection("authInfo"))
 
-  override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = ???
+  override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
+    val query = Json.obj("_id" -> loginInfo)
+    collection.flatMap(_.find(query, projection = Some(Json.obj("_id" -> 0))).one[PasswordInfo])
+  }
 
   override def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
-    onSuccess(collection.flatMap(_.insert(ordered=false).one(merge(loginInfo, authInfo))), authInfo)
+    val query = merge(loginInfo, authInfo)
+    onSuccess(collection.flatMap(_.insert(ordered=false).one(query)), authInfo)
   }
 
   override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
@@ -37,8 +41,9 @@ class PasswordInfoDAO @Inject()(reactiveMongoApi: ReactiveMongoApi)(implicit ec:
 
   override def remove(loginInfo: LoginInfo): Future[Unit] = ???
 
-  private def merge(loginInfo: LoginInfo, authInfo: PasswordInfo) =
+  private def merge(loginInfo: LoginInfo, authInfo: PasswordInfo): JsObject = {
     Json.obj("_id" -> loginInfo).deepMerge(Json.toJson(authInfo).as[JsObject])
+  }
 
   private def onSuccess[T](result: Future[WriteResult], entity: T): Future[T] = result.recoverWith {
     case e => Future.failed(new Exception("Got exception from MongoDB", e.getCause))

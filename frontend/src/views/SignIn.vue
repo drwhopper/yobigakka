@@ -6,7 +6,7 @@
     <div class="card-content">
       <div class="content">
         <b-field label="Sign in">
-          <b-input v-model="aa" />
+          <b-input v-model="userID" />
           <b-input v-model="password" />
           <p class="control">
             <b-button class="button is-primary" @click="submit">
@@ -29,14 +29,10 @@ export default class SignIn extends Vue {
   password = "";
   submit() {
     axios
-      .post(
-        "/signin",
-        {
-          userID: this.userID,
-          password: this.password
-        },
-        { headers: { "X-Requested-With": "wpwp", "Csrf-Token": "nocheck" } }
-      )
+      .post("/signin", {
+        userID: this.userID,
+        password: this.password
+      })
       .then(() => this.$router.push("/"))
       .catch(error => console.log(error.response));
   }
