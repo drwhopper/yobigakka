@@ -11,7 +11,7 @@ import com.mohiva.play.silhouette.crypto.{JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.util.SecureRandomIDGenerator
-import com.mohiva.play.silhouette.password.BCryptPasswordHasher
+import com.mohiva.play.silhouette.password.BCryptSha256PasswordHasher
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import models.DefaultEnv
 import models.daos._
@@ -37,7 +37,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
     bind[UserService].to[UserServiceImpl]
     bind[UserDAO].to[UserDAOImpl]
-    bind[PasswordHasher].toInstance(new BCryptPasswordHasher)
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())
@@ -76,12 +75,19 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   }
 
   @Provides
-  def provideCredentialsProvider(reactiveMongoApi: ReactiveMongoApi,
-                                 passwordHasher: PasswordHasher): CredentialsProvider = {
-    implicit lazy val format: OFormat[PasswordInfo] = Json.format[PasswordInfo]
+  def provideAuthInfoRepository(reactiveMongoApi: ReactiveMongoApi): AuthInfoRepository = {
+    new DelegableAuthInfoRepository(new PasswordInfoDAO(reactiveMongoApi))
+  }
 
-    val authInfoRepository = new DelegableAuthInfoRepository(new PasswordInfoDAO(reactiveMongoApi))
-    val passwordHasherRegistry = PasswordHasherRegistry(passwordHasher)
+  @Provides
+  def providePasswordHasherRegistry(): PasswordHasherRegistry = {
+    PasswordHasherRegistry(new BCryptSha256PasswordHasher())
+  }
+
+  @Provides
+  def provideCredentialsProvider(authInfoRepository: AuthInfoRepository,
+                                 passwordHasherRegistry: PasswordHasherRegistry): CredentialsProvider = {
+    implicit lazy val format: OFormat[PasswordInfo] = Json.format[PasswordInfo]
     new CredentialsProvider(authInfoRepository, passwordHasherRegistry)
   }
 }

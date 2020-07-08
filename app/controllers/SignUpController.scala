@@ -18,7 +18,7 @@ class SignUpController @Inject()(val controllerComponents: ControllerComponents,
 
   val logger: Logger = Logger(this.getClass)
 
-  def submit: Action[AnyContent] = silhouette.UnsecuredAction.async  {
+  def submit: Action[AnyContent] = silhouette.UnsecuredAction.async {
     implicit request: Request[AnyContent] => {
       SignUpForm.form.bindFromRequest.fold(
         _ => Future.successful(BadRequest),
@@ -26,6 +26,7 @@ class SignUpController @Inject()(val controllerComponents: ControllerComponents,
           signUpService.signUpByCredentials(data).map {
             case UserCreated(user) =>
               silhouette.env.eventBus.publish(SignUpEvent(user, request))
+              logger.warn("aa")
               Ok
             case UserAlreadyExists =>
               Conflict

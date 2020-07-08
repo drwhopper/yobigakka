@@ -10,6 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserServiceImpl @Inject()(userDAO: UserDAO)(implicit ec: ExecutionContext) extends UserService {
   /**
    * LoginInfoからユーザを見つけ出す
+   *
    * @param loginInfo loginInfo
    * @return
    */
