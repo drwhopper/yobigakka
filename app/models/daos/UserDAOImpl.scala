@@ -1,18 +1,23 @@
 package models.daos
 
+import akka.stream.Materializer
+import akka.stream.alpakka.orientdb._
+import akka.stream.alpakka.orientdb.scaladsl._
+import akka.stream.scaladsl.{Sink, Source}
 import com.mohiva.play.silhouette.api.LoginInfo
+import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
+import com.orientechnologies.orient.core.record.impl.ODocument
 import javax.inject.Inject
 import models.User
 import play.api.libs.json._
-import play.modules.reactivemongo._
-import reactivemongo.play.json.compat._
-import reactivemongo.play.json.collection._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration._
 
-class UserDAOImpl @Inject()(implicit ex: ExecutionContext, reactiveMongoApi: ReactiveMongoApi) extends UserDAO {
+class UserDAOImpl @Inject()(implicit ex: ExecutionContext, oDatabase: OPartitionedDatabasePool, materializer: Materializer) extends UserDAO {
 
-  def collection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection("user"))
+
+  val className = "owwfuser"
 
   /**
    * 認証情報からユーザ探し
@@ -20,8 +25,10 @@ class UserDAOImpl @Inject()(implicit ex: ExecutionContext, reactiveMongoApi: Rea
    * @return
    */
   override def find(loginInfo: LoginInfo): Future[Option[User]] = {
-    val query = Json.obj("loginInfo" -> loginInfo)
-    collection.flatMap(_.find(query, Option.empty[JsObject]).one[User])
+    OrientDbSource.typed(className, OrientDbSourceSettings(oDatabase), classOf[User])
+      .filter(_.oDocument.loginInfo == loginInfo)
+      .map(_.oDocument)
+      .runWith(Sink.headOption)
   }
 
   /**
@@ -30,13 +37,18 @@ class UserDAOImpl @Inject()(implicit ex: ExecutionContext, reactiveMongoApi: Rea
    * @return
    */
   override def findByUID(userID: String): Future[Option[User]] = {
-    val query = Json.obj("userID" -> userID)
-    collection.flatMap(_.find(query, Option.empty[JsObject]).one[User])
+    OrientDbSource.typed(className, OrientDbSourceSettings(oDatabase), classOf[User])
+      .filter(_.oDocument.userID == userID)
+      .map(_.oDocument)
+      .runWith(Sink.headOption)
   }
 
   override def save(user: User): Future[User] = {
-    val query = Json.obj("userID" -> user.userID)
-    collection.flatMap(_.update.one(query, user, upsert = true))
-    Future.successful(user)
+    println(user)
+    Source.single(user)
+      .map(OrientDbWriteMessage(_))
+      .groupedWithin(10, 50.millis)
+      .runWith(OrientDbSink.typed(className, OrientDbWriteSettings(oDatabase), classOf[User]))
+    Future(user)
   }
 }

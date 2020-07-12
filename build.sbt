@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "com.iheart" %% "ficus" % "1.4.7",
   "org.reactivemongo" %% "play2-reactivemongo" % "0.20.11-play28",
   "org.reactivemongo" %% "reactivemongo-play-json-compat" % "0.20.11-play28",
+  "com.lightbend.akka" %% "akka-stream-alpakka-orientdb" % "2.0.1",
 
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
   "com.mohiva" %% "play-silhouette-testkit" % "7.0.0" % Test
