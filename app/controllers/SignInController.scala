@@ -31,8 +31,6 @@ class SignInController @Inject()(val controllerComponents: ControllerComponents,
           credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
             userService.retrieve(loginInfo).flatMap {
               case Some(user) =>
-                logger.warn(loginInfo.toString)
-                Future.successful(Ok)
                 silhouette.env.authenticatorService.create(loginInfo).flatMap {
                   authenticator => {
                     silhouette.env.eventBus.publish(LoginEvent(user, request))
@@ -44,12 +42,10 @@ class SignInController @Inject()(val controllerComponents: ControllerComponents,
               case None => Future.successful(Forbidden(Json.obj("errorCode" -> "UserNotFound")))
             }
           }.recover {
-            case _: InvalidPasswordException =>
-              Forbidden(Json.obj("errorCode" -> "InvalidPasswordOrUser"))
-            case _: IdentityNotFoundException =>
+            case _: InvalidPasswordException | _: IdentityNotFoundException =>
               Forbidden(Json.obj("errorCode" -> "InvalidPasswordOrUser"))
             case e =>
-              logger.error(s"Sign in error email = ${data.userID}", e)
+              logger.error(s"Sign in error user = ${data.userID}", e)
               InternalServerError(Json.obj("errorCode" -> "SystemError"))
           }
         }

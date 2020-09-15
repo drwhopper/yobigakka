@@ -33,7 +33,10 @@ export default class SignUp extends Vue {
         userID: this.userID,
         password: this.password
       })
-      .then(() => this.$router.push("/"))
+      .then(response => {
+        console.log(response);
+        this.$router.push("/");
+      })
       .catch(error => console.log(error.response));
   }
 }
